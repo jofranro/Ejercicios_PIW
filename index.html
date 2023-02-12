@@ -1,0 +1,95 @@
+<html>
+    <head>
+        <link rel="stylesheet" href="style.css"/>
+        <link rel="icon" type="image/jpeg" href="logo.png">
+        <title>Pagina Rick & Morty</title>
+        <script lang="javascript">
+
+            var pagina = 1;
+            var paginaEncontradaNombre = 1;
+            var buscarNombre = false;
+
+            function fetchChars(){
+                fetch(`https://rickandmortyapi.com/api/character/?page=${pagina}`)
+                .then(data => data.json())
+                .then(chars => {
+                    var container = document.getElementById("results");
+                    container.innerHTML = "";
+                    for(var char of chars.results){
+                        var div = document.createElement("div");
+                        div.className = "char";
+                        var img = document.createElement("img");
+                        img.src = char.image;
+                        var name = document.createElement("p");
+                        name.innerHTML = char.name;
+                        div.appendChild(img);
+                        div.appendChild(name);
+                        container.appendChild(div);                        
+                    }
+                })
+            }
+
+            function findCharacter(){
+                buscarNombre = true;
+                var name = document.getElementById("name").value;
+
+                fetch(`https://rickandmortyapi.com/api/character/?name=${name}&page=${paginaEncontradaNombre}`)
+                .then(data => data.json())
+                .then(chars => {
+                    var container = document.getElementById("results");
+                    container.innerHTML = "";
+                    for(var char of chars.results){
+                        var div = document.createElement("div");
+                        div.className = "char";
+                        var img = document.createElement("img");
+                        img.src = char.image;
+                        var name = document.createElement("p");
+                        name.innerHTML = char.name;
+                        div.appendChild(img);
+                        div.appendChild(name);
+                        container.appendChild(div);
+                        page.innerHTML = paginaEncontradaNombre;
+                    }
+                })
+            }          
+
+            function avanzarPage(){
+                page = document.getElementById("page");
+                if (buscarNombre == false) {
+                    pagina = parseInt(pagina) + 1;
+                    page.innerHTML = parseInt(page.innerHTML) + 1;
+                    fetchChars();
+                } else {
+                    page.innerHTML = parseInt(page.innerHTML) + 1;
+                    paginaEncontradaNombre = parseInt(paginaEncontradaNombre) + 1;
+                    findCharacter();
+                }
+            }
+
+            function retrocederPage(){
+                if(buscarNombre == false){
+                    if (page.innerHTML == 1) return;
+                    page.innerHTML = parseInt(page.innerHTML) - 1;
+                    pagina = parseInt(pagina) - 1;
+                    fetchChars();
+                } else {
+                    if (page.innerHTML == 1) return;
+                    page.innerHTML = parseInt(page.innerHTML) - 1;
+                    paginaEncontradaNombre = parseInt(paginaEncontradaNombre) - 1;
+                    findCharacter();     
+                }
+            }
+            
+        </script>
+        <body class="container" onload="fetchChars()">
+            <div class="pagination">
+                <button onclick="retrocederPage()">Anterior</button>
+                <p id="page">1</p>
+                <button onclick="avanzarPage()">Siguiente</button>
+                <input type="text" id="name" placeholder="Nombre del personaje"/>
+                <button onclick="findCharacter()">Buscar</button>
+            </div>
+            <div class="item" id="results"></div>
+        </body>
+    </head>
+</html>

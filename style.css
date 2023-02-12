@@ -1,0 +1,18 @@
+.container {
+    display: flex;
+    flex-direction: column;
+    background-color: #fabada;
+}
+.pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+}
+.item {
+    display: flex;
+    align-items: flex-start;
+    flex-wrap: wrap;
+    justify-content: space-around; 
+    text-align: center;
+}
